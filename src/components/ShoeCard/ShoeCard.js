@@ -36,14 +36,16 @@ const ShoeCard = ({
       <Wrapper>
         <ImageWrapper>
           <Image alt="" src={imageSrc} />
+          {variant !== 'default' ? <Flag variant={variant}>{typeof salePrice === 'number' ? 'Sale' : 'Just released'}</Flag> : undefined}
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          <Price variant={variant}>{formatPrice(price)}</Price>
         </Row>
         <Row>
           <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+          {variant === 'on-sale' ? <SalePrice>{formatPrice(salePrice)}</SalePrice> : undefined}
         </Row>
       </Wrapper>
     </Link>
@@ -53,18 +55,39 @@ const ShoeCard = ({
 const Link = styled.a`
   text-decoration: none;
   color: inherit;
+  flex: 1 1 300px;
 `;
 
-const Wrapper = styled.article``;
+const Wrapper = styled.article`
+  display: flex;
+  flex-direction: column;
+`;
 
 const ImageWrapper = styled.div`
   position: relative;
 `;
 
-const Image = styled.img``;
+const Image = styled.img`
+  width: 100%;
+  border-radius: 16px 16px 4px 4px;
+`;
+
+const Flag = styled.div`
+  color: white;
+  background-color: ${prop => prop.variant === 'on-sale' ? `${COLORS.primary}` : `${COLORS.secondary}`};
+  font-size: ${14 / 16}rem;
+  font-weight: 700;
+  position: absolute;
+  top: 12px;
+  right: -4px;
+  padding: 7px 9px 9px 10px;
+  border-radius: 2px;
+`;
 
 const Row = styled.div`
   font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const Name = styled.h3`
@@ -72,7 +95,9 @@ const Name = styled.h3`
   color: ${COLORS.gray[900]};
 `;
 
-const Price = styled.span``;
+const Price = styled.span`
+  text-decoration: ${prop => prop.variant === 'on-sale' ? 'line-through' : 'none' }
+`;
 
 const ColorInfo = styled.p`
   color: ${COLORS.gray[700]};
